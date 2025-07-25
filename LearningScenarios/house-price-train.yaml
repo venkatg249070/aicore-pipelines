@@ -21,15 +21,16 @@ spec:
     - - name: mypredictor
         template: mycodeblock1
   - name: mycodeblock1
+    # Add your resource plan here. The annotation should follow metadata > labels > ai.sap.com/resourcePlan: <plan>
     inputs:
       artifacts:  # placeholder for cloud storage attachements
         - name: housedataset # a name for the placeholder
           path: /app/data/ # where to copy in the Dataset in the Docker image
     container:
-      image: docker.io/venkatg249070/house-price:03 # Your docker image name
+      image: docker.io/<YOUR_DOCKER_USERNAME>/house-price:03 # Your docker image name
       command: ["/bin/sh", "-c"]
       env:
         - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
-          value: "3" # will make it as variable later
+          value: "{{workflow.parameters.DT_MAX_DEPTH}}" # value to set from local (to workflow) variable DT_MAX_DEPTH
       args:
         - "python /app/src/main.py"
