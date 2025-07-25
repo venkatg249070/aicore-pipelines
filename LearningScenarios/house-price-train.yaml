@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: data-pipeline # executable id, must be unique across all your workflows (YAML files)
+  name: data-pipeline-train # executable id, must be unique across all your workflows (YAML files)
   annotations:
     scenarios.ai.sap.com/description: "Learning how to ingest data to workflows"
     scenarios.ai.sap.com/name: "House Price (Tutorial)" # Scenario name should be the use case
