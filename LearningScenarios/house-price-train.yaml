@@ -24,6 +24,9 @@ spec:
     - - name: mypredictor
         template: mycodeblock1
   - name: mycodeblock1
+    metadata:
+        labels:
+            ai.sap.com/resourcePlan: starter
     # Add your resource plan here. The annotation should follow metadata > labels > ai.sap.com/resourcePlan: <plan>
     inputs:
       artifacts:  # placeholder for cloud storage attachements
