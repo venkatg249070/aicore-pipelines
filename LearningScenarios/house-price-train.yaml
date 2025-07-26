@@ -10,7 +10,7 @@ metadata:
     artifacts.ai.sap.com/housedataset.kind: "dataset" # Helps in suggesting the kind of inputs that can be attached.
   labels:
     scenarios.ai.sap.com/id: "learning-datalines"
-    ai.sap.com/version: "6.0"
+    ai.sap.com/version: "6.1"
 spec:
   imagePullSecrets:
     - name: doccredstutorialrepo # your docker registry secret
