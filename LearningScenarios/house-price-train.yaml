@@ -10,8 +10,8 @@ metadata:
     artifacts.ai.sap.com/housedataset.kind: "dataset" # Helps in suggesting the kind of artifact that can be attached.
     artifacts.ai.sap.com/housemodel.kind: "model" # Helps in suggesting the kind of artifact that can be generated.
   labels:
-    scenarios.ai.sap.com/id: "learning-datalines"
-    ai.sap.com/version: "7.0"
+    scenarios.ai.sap.com/id: "learning-datapipelines"
+    ai.sap.com/version: "10.0"
 spec:
   imagePullSecrets:
     - name: doccredstutorialrepo # your docker registry secret
@@ -28,7 +28,7 @@ spec:
     inputs:
       artifacts:  # placeholder for cloud storage attachements
         - name: housedataset # a name for the placeholder
-          path: /argo/inputs/artifacts/housedataset # where to copy in the Dataset in the Docker image
+          path: /app/data/ # where to copy in the Dataset in the Docker image
     outputs:
       artifacts:
         - name: housepricemodel # name of the artifact generated, and folder name when placed in S3, complete directory will be `../<executaion_id>/housepricemodel`
@@ -38,7 +38,7 @@ spec:
             none:   # specify not to compress while uploading to cloud
               {}
     container:
-      image: docker.io/venkatg249070/house-price:07 # Your docker image name
+      image: docker.io/venkatg249070/house-price:10 # Your docker image name
       command: ["/bin/sh", "-c"]
       env:
         - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
