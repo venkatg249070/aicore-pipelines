@@ -11,7 +11,7 @@ metadata:
     artifacts.ai.sap.com/housemodel.kind: "model" # Helps in suggesting the kind of artifact that can be generated.
   labels:
     scenarios.ai.sap.com/id: "learning-datapipelines"
-    ai.sap.com/version: "10.0"
+    ai.sap.com/version: "10.00"
 spec:
   imagePullSecrets:
     - name: doccredstutorialrepo # your docker registry secret
