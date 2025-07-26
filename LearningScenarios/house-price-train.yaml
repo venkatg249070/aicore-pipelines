@@ -10,7 +10,7 @@ metadata:
     artifacts.ai.sap.com/housedataset.kind: "dataset" # Helps in suggesting the kind of inputs that can be attached.
   labels:
     scenarios.ai.sap.com/id: "learning-datalines"
-    ai.sap.com/version: "5.0"
+    ai.sap.com/version: "6.0"
 spec:
   imagePullSecrets:
     - name: doccredstutorialrepo # your docker registry secret
@@ -33,7 +33,7 @@ spec:
         - name: housedataset # a name for the placeholder
           path: /app/data/ # where to copy in the Dataset in the Docker image
     container:
-      image: docker.io/venkatg249070/house-price:05 # Your docker image name
+      image: docker.io/venkatg249070/house-price:06 # Your docker image name
       command: ["/bin/sh", "-c"]
       env:
         - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
