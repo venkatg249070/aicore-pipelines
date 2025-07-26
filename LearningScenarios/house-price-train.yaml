@@ -11,7 +11,7 @@ metadata:
     artifacts.ai.sap.com/housemodel.kind: "model" # Helps in suggesting the kind of artifact that can be generated.
   labels:
     scenarios.ai.sap.com/id: "learning-datalines"
-    ai.sap.com/version: "2.0"
+    ai.sap.com/version: "9.0"
 spec:
   imagePullSecrets:
     - name: doccredstutorialrepo # your docker registry secret
@@ -38,7 +38,7 @@ spec:
             none:   # specify not to compress while uploading to cloud
               {}
     container:
-      image: docker.io/venkatg249070/house-price:03 # Your docker image name
+      image: docker.io/venkatg249070/house-price:06 # Your docker image name
       command: ["/bin/sh", "-c"]
       env:
         - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
