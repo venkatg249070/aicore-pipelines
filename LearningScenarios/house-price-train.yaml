@@ -45,4 +45,4 @@ spec:
         - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
           value: "{{workflow.parameters.DT_MAX_DEPTH}}" # value to set from local (to workflow) variable DT_MAX_DEPTH
       args:
-        - "ls -l /app/data && ls -l /app/model && ls -l / && python /app/src/main.py"
+        - "mv /argo/inputs/artifacts/housedataset /app/model/train.csv && python /app/src/main.py"
