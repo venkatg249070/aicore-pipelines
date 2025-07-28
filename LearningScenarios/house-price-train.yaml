@@ -28,7 +28,7 @@ spec:
     inputs:
       artifacts:  # placeholder for cloud storage attachements
         - name: housedataset # a name for the placeholder
-          path: /app/data/ # where to copy in the Dataset in the Docker image
+          path: /argo/inputs/artifacts/housedataset # where to copy in the Dataset in the Docker image
     outputs:
       artifacts:
         - name: housepricemodel # local identifier name to the workflow
@@ -44,4 +44,4 @@ spec:
         - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
           value: "{{workflow.parameters.DT_MAX_DEPTH}}" # value to set from local (to workflow) variable DT_MAX_DEPTH
       args:
-        - "cp /argo/inputs/artifacts/housedataset /app/data/train.csv && python /app/src/main.py"
+        - "cp /argo/inputs/artifacts/housedataset /app/data/train.csv && python /app/src/main.py && cp /app/model /argo/output/artifacts"
