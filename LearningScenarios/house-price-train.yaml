@@ -1,52 +1,47 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: data-pipeline  # Unique identifier for the workflow
+  name: datatrain-pipeline # executable id, must be unique across all your workflows (YAML files)
   annotations:
     scenarios.ai.sap.com/description: "Learning how to ingest data to workflows"
-    scenarios.ai.sap.com/name: "House Price (Tutorial)"
+    scenarios.ai.sap.com/name: "House Price (Tutorial)" # Scenario name should be the use case
     executables.ai.sap.com/description: "Train with live data"
-    executables.ai.sap.com/name: "training"
-    artifacts.ai.sap.com/housedataset.kind: "dataset"
-    artifacts.ai.sap.com/housepricemodel.kind: "model"
+    executables.ai.sap.com/name: "training" # Executable name should describe the workflow in the use case
+    artifacts.ai.sap.com/housedataset.kind: "dataset" # Helps in suggesting the kind of artifact that can be attached.
+    artifacts.ai.sap.com/housemodel.kind: "model" # Helps in suggesting the kind of artifact that can be generated.
   labels:
     scenarios.ai.sap.com/id: "learning-datalines"
-    ai.sap.com/version: "1.0"
-
+    ai.sap.com/version: "10.0"
 spec:
   imagePullSecrets:
-    - name: doccredstutorialrepo  # Updated Docker registry secret
+    - name: doccredstutorialrepo # your docker registry secret
   entrypoint: mypipeline
   arguments:
-    parameters:
-      - name: DT_MAX_DEPTH  # User-defined parameter (e.g., max depth of tree)
-
+    parameters: # placeholder for string like inputs
+        - name: DT_MAX_DEPTH # identifier local to this workflow
   templates:
-    - name: mypipeline
-      steps:
-        - - name: mypredictor
-            template: mycodeblock1
-
-    - name: mycodeblock1
-      metadata:
-        labels:
-          ai.sap.com/resourcePlan: starter
-      inputs:
-        artifacts:
-          - name: housedataset
-            path: /app/data/train.csv  # Dataset will be copied to this path
-      outputs:
-        artifacts:
-          - name: housepricemodel
-            globalName: housepricemodel
-            path: /app/model/
-            archive:
-              none: {}  # Upload raw files (not compressed)
-      container:
-        image: docker.io/venkatg249070/house-price:10  # Updated Docker image
-        command: ["/bin/sh", "-c"]
-        env:
-          - name: DT_MAX_DEPTH
-            value: "{{workflow.parameters.DT_MAX_DEPTH}}"
-        args:
-          - "python /app/src/main.py"
+  - name: mypipeline
+    steps:
+    - - name: mypredictor
+        template: mycodeblock1
+  - name: mycodeblock1
+    inputs:
+      artifacts:  # placeholder for cloud storage attachements
+        - name: housedataset # a name for the placeholder
+          path: /argo/inputs/artifacts/housedataset # where to copy in the Dataset in the Docker image
+    outputs:
+      artifacts:
+        - name: housepricemodel # local identifier name to the workflow
+          globalName: housemodel # name of the artifact generated, and folder name when placed in S3, complete directory will be `../<executaion_id>/housemodel`. Also used above in annotation
+          path: /app/model/ # from which folder in docker image (after running workflow step) copy contents to cloud storage
+          archive:
+            none:   # specify not to compress while uploading to cloud
+              {}
+    container:
+      image: docker.io/venkatg249070/house-price:10 # Your docker image name
+      command: ["/bin/sh", "-c"]
+      env:
+        - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
+          value: "{{workflow.parameters.DT_MAX_DEPTH}}" # value to set from local (to workflow) variable DT_MAX_DEPTH
+      args:
+        - "cp /argo/inputs/artifacts/housedataset /app/data/train.csv && python /app/src/main.py && ls ai://example-dataset/house-price-toy"
