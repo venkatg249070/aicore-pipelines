@@ -1,25 +1,26 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: data-pipeline
+  name: data-pipeline  # Unique identifier for the workflow
   annotations:
     scenarios.ai.sap.com/description: "Learning how to ingest data to workflows"
     scenarios.ai.sap.com/name: "House Price (Tutorial)"
     executables.ai.sap.com/description: "Train with live data"
     executables.ai.sap.com/name: "training"
     artifacts.ai.sap.com/housedataset.kind: "dataset"
-    artifacts.ai.sap.com/housemodel.kind: "model"
+    artifacts.ai.sap.com/housepricemodel.kind: "model"
   labels:
     scenarios.ai.sap.com/id: "learning-datalines"
     ai.sap.com/version: "1.0"
 
 spec:
   imagePullSecrets:
-    - name: credstutorialrepo
+    - name: doccredstutorialrepo  # Updated Docker registry secret
   entrypoint: mypipeline
   arguments:
     parameters:
-      - name: DT_MAX_DEPTH
+      - name: DT_MAX_DEPTH  # User-defined parameter (e.g., max depth of tree)
+
   templates:
     - name: mypipeline
       steps:
@@ -33,16 +34,16 @@ spec:
       inputs:
         artifacts:
           - name: housedataset
-            path: /app/data/train.csv
+            path: /app/data/train.csv  # Dataset will be copied to this path
       outputs:
         artifacts:
           - name: housepricemodel
-            globalName: housemodel
+            globalName: housepricemodel
             path: /app/model/
             archive:
-              none: {}
+              none: {}  # Upload raw files (not compressed)
       container:
-        image: docker.io/chetankommula/house-price:03
+        image: docker.io/venkatg249070/house-price:10  # Updated Docker image
         command: ["/bin/sh", "-c"]
         env:
           - name: DT_MAX_DEPTH
