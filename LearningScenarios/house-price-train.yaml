@@ -11,7 +11,7 @@ metadata:
     artifacts.ai.sap.com/housemodel.kind: "model" # Helps in suggesting the kind of artifact that can be generated.
   labels:
     scenarios.ai.sap.com/id: "learning-datalines"
-    ai.sap.com/version: "10.00"
+    ai.sap.com/version: "9.00"
 spec:
   imagePullSecrets:
     - name: doccredstutorialrepo # your docker registry secret
@@ -28,7 +28,7 @@ spec:
     inputs:
       artifacts:  # placeholder for cloud storage attachements
         - name: housedataset # a name for the placeholder
-          path: /argo/inputs/artifacts/housedataset # where to copy in the Dataset in the Docker image
+          path: /app/data/ # where to copy in the Dataset in the Docker image
     outputs:
       artifacts:
         - name: model # local identifier name to the workflow
@@ -44,4 +44,4 @@ spec:
         - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
           value: "{{workflow.parameters.DT_MAX_DEPTH}}" # value to set from local (to workflow) variable DT_MAX_DEPTH
       args:
-        - "cp /argo/inputs/artifacts/housedataset /app/data/train.csv && python /app/src/main.py && ls /app/model"
+        - "python /app/src/main.py && ls /app/data && ls /app/model"
