@@ -30,7 +30,7 @@ spec:
         - name: housedataset # a name for the placeholder
           path: /argo/inputs/artifacts/housedataset # where to copy in the Dataset in the Docker image
     container:
-      image: docker.io/venkatg249070/house-price:10 # Your docker image name
+      image: docker.io/venkatg249070/house-price:code # Your docker image name
       command: ["/bin/sh", "-c"]
       env:
         - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
