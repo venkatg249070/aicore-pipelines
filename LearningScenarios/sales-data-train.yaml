@@ -11,7 +11,7 @@ metadata:
     artifacts.ai.sap.com/salesmodel.kind: "model" # Helps in suggesting the kind of artifact that can be generated.
   labels:
     scenarios.ai.sap.com/id: "learning-salesdata"
-    ai.sap.com/version: "code"
+    ai.sap.com/version: "train"
 spec:
   imagePullSecrets:
     - name: doccredstutorialrepo # your docker registry secret
@@ -30,7 +30,7 @@ spec:
         - name: salesdataset # a name for the placeholder
           path: /argo/inputs/artifacts/salesdataset # where to copy in the Dataset in the Docker image
     container:
-      image: docker.io/venkatg249070/sales-price:code # Your docker image name
+      image: docker.io/venkatg249070/sales-price:train # Your docker image name
       command: ["/bin/sh", "-c"]
       env:
         - name: DT_MAX_DEPTH # name of the environment variable inside Docker container
