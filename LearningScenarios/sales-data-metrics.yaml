@@ -28,7 +28,7 @@ spec:
     inputs:
       artifacts:  # placeholder for cloud storage attachements
         - name: salesdataset # a name for the placeholder
-          path: /app/data/ # where to copy in the Dataset in the Docker image
+          path: /argo/inputs/artifacts/salesdataset # where to copy in the Dataset in the Docker image
     outputs:
       artifacts:
         - name: salesmodel # local identifier name to the workflow
