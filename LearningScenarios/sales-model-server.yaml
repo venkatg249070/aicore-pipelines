@@ -1,10 +1,10 @@
 apiVersion: ai.sap.com/v1alpha1
 kind: ServingTemplate
 metadata:
-  name: salesserver-pipeline
+  name: sales-server-pipeline
   annotations:
     scenarios.ai.sap.com/description: Learning how to ingest data to workflows
-    scenarios.ai.sap.com/name: Sales Dataset (Tutorial)
+    scenarios.ai.sap.com/name: Sales Dataset(Tutorial)
     executables.ai.sap.com/description: Train with sales data
     executables.ai.sap.com/name: training
     artifacts.ai.sap.com/salesdataset.kind: dataset
