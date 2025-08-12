@@ -1,7 +1,7 @@
 apiVersion: ai.sap.com/v1alpha1
 kind: ServingTemplate
 metadata:
-  name: serversales-pipeline
+  name: saleservers-pipeline
   annotations:
     scenarios.ai.sap.com/description: Learning how to ingest data to workflows
     scenarios.ai.sap.com/name: Sales Dataset(Tutorial)
@@ -10,7 +10,7 @@ metadata:
     artifacts.ai.sap.com/salesdataset.kind: dataset
     artifacts.ai.sap.com/salesmodel.kind: model
   labels:
-    scenarios.ai.sap.com/id: predict-salesdata
+    scenarios.ai.sap.com/id: predict-sales
     ai.sap.com/version: server
 spec:
   inputs:
