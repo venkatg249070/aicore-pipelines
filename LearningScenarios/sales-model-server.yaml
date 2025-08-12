@@ -1,0 +1,51 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ServingTemplate
+metadata:
+  name: salesserver-pipeline # executable ID, must be unique across your SAP AI Core instance, for example use `server-pipeline-yourname-1234`
+annotations:
+    scenarios.ai.sap.com/description: "Learning how to ingest data to workflows"
+    scenarios.ai.sap.com/name: "Sales Dataset (Tutorial)" # Scenario name should be the use case
+    executables.ai.sap.com/description: "Train with sales data"
+    executables.ai.sap.com/name: "training" # Executable name should describe the workflow in the use case
+    artifacts.ai.sap.com/salesdataset.kind: "dataset" # Helps in suggesting the kind of artifact that can be attached.
+    artifacts.ai.sap.com/salesmodel.kind: "model" # Helps in suggesting the kind of artifact that can be generated.
+  labels:
+    scenarios.ai.sap.com/id: "predict-salesdata"
+    ai.sap.com/version: "server"
+spec:
+  inputs:
+    artifacts:
+      - name: salesdataset # placeholder name, do not add `-` in value use only alphanumeric chars
+    parameters:
+      - name: greetmessage # placeholder name
+        type: string # required for every parameters
+  template:
+    apiVersion: "serving.kserve.io/v1beta1"
+    metadata:
+      annotations: |
+        autoscaling.knative.dev/metric: concurrency   # condition when to scale
+        autoscaling.knative.dev/target: 1
+        autoscaling.knative.dev/targetBurstCapacity: 0
+      labels: |
+        ai.sap.com/resourcePlan: starter # computing power
+    spec: |
+      predictor:
+        imagePullSecrets:
+          - name: doccredstutorialrepo   # your docker registry secret
+        minReplicas: 1
+        maxReplicas: 3    # how much to scale
+        containers:
+        - name: kserve-container
+          image: "docker.io/venkatg249070/sales-price:server"
+          ports:
+            - containerPort: 9001    # customizable port
+              protocol: TCP
+          command: ["/bin/sh", "-c"]
+          args:
+            - >
+              set -e && echo "Starting" && gunicorn --chdir /app/src main:app -b 0.0.0.0:9001 # filename `main` flask variable `app`
+          env:
+            - name: STORAGE_URI # Required
+              value: "{{inputs.artifacts.salesdataset}}" # Required reference from artifact name, see above
+            - name: greetingmessage # different name to avoid confusion
+              value: "{{inputs.parameters.greetmessage}}"
