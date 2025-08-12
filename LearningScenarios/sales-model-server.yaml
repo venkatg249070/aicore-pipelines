@@ -15,7 +15,7 @@ metadata:
 spec:
   inputs:
     artifacts:
-      - name: salesdataset
+      - name: salesmodel
     parameters:
       - name: greetmessage
         type: string
