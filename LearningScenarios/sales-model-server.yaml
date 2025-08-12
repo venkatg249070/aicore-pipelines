@@ -46,6 +46,6 @@ spec:
               set -e && echo "Starting" && gunicorn --chdir /app/src main:app -b 0.0.0.0:9001 # filename `main` flask variable `app`
           env:
             - name: STORAGE_URI # Required
-              value: "{{inputs.artifacts.salesdataset}}" # Required reference from artifact name, see above
+              value: "{{inputs.artifacts.salesmodel}}" # Required reference from artifact name, see above
             - name: greetingmessage # different name to avoid confusion
               value: "{{inputs.parameters.greetmessage}}"
