@@ -1,26 +1,26 @@
 apiVersion: ai.sap.com/v1alpha1
 kind: ServingTemplate
 metadata:
-  name: salesserver-pipeline # executable ID, must be unique across your SAP AI Core instance, for example use `server-pipeline-yourname-1234`
-annotations:
-    scenarios.ai.sap.com/description: "Learning how to ingest data to workflows"
-    scenarios.ai.sap.com/name: "Sales Dataset (Tutorial)" # Scenario name should be the use case
-    executables.ai.sap.com/description: "Train with sales data"
-    executables.ai.sap.com/name: "training" # Executable name should describe the workflow in the use case
-    artifacts.ai.sap.com/salesdataset.kind: "dataset" # Helps in suggesting the kind of artifact that can be attached.
-    artifacts.ai.sap.com/salesmodel.kind: "model" # Helps in suggesting the kind of artifact that can be generated.
+  name: salesserver-pipeline
+  annotations:
+    scenarios.ai.sap.com/description: Learning how to ingest data to workflows
+    scenarios.ai.sap.com/name: Sales Dataset (Tutorial)
+    executables.ai.sap.com/description: Train with sales data
+    executables.ai.sap.com/name: training
+    artifacts.ai.sap.com/salesdataset.kind: dataset
+    artifacts.ai.sap.com/salesmodel.kind: model
   labels:
-    scenarios.ai.sap.com/id: "predict-salesdata"
-    ai.sap.com/version: "server"
+    scenarios.ai.sap.com/id: predict-salesdata
+    ai.sap.com/version: server
 spec:
   inputs:
     artifacts:
-      - name: salesdataset # placeholder name, do not add `-` in value use only alphanumeric chars
+      - name: salesdataset
     parameters:
-      - name: greetmessage # placeholder name
-        type: string # required for every parameters
+      - name: greetmessage
+        type: string
   template:
-    apiVersion: "serving.kserve.io/v1beta1"
+    apiVersion: serving.kserve.io/v1beta1
     metadata:
       annotations: |
         autoscaling.knative.dev/metric: concurrency   # condition when to scale
@@ -28,7 +28,7 @@ spec:
         autoscaling.knative.dev/targetBurstCapacity: 0
       labels: |
         ai.sap.com/resourcePlan: starter # computing power
-    spec: |
+    spec: >
       predictor:
         imagePullSecrets:
           - name: doccredstutorialrepo   # your docker registry secret
