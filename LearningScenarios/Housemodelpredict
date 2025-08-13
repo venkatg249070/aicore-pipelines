@@ -1,0 +1,63 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ServingTemplate
+metadata:
+  name: server-pipeline
+  annotations:
+    scenarios.ai.sap.com/description: "Learning to predict house price"
+    scenarios.ai.sap.com/name: "House Price (Tutorial)"
+    executables.ai.sap.com/description: "Create online server to make live predictions"
+    executables.ai.sap.com/name: "server"
+  labels:
+    scenarios.ai.sap.com/id: "learning-datalines"
+    ai.sap.com/version: "5.0"
+spec:
+  inputs:
+    artifacts:
+      - name: housemodel
+    parameters:
+      - name: greetmessage
+        type: string
+  template:
+    apiVersion: "serving.kserve.io/v1beta1"
+    metadata:
+      annotations: |
+        autoscaling.knative.dev/metric: concurrency
+        autoscaling.knative.dev/target: "1"
+        autoscaling.knative.dev/targetBurstCapacity: "0"
+      labels: |
+        ai.sap.com/resourcePlan: starter
+    spec: |
+      predictor:
+        imagePullSecrets:
+          - name: credstutorialrepo
+        minReplicas: 1
+        maxReplicas: 3
+        containers:
+        - name: kserve-container
+          image: "docker.io/chetankommula/house-server:03"   # <-- new tag
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          command: ["gunicorn"]
+          args: ["-w","2","-b","0.0.0.0:8080","main:app"]
+          env:
+            # Storage initializer will place this at /mnt/models/model.pkl
+            - name: STORAGE_URI
+              value: "{{inputs.artifacts.housemodel}}/model.pkl"
+            # Our app defaults to /mnt/models/model.pkl, but set explicitly if you want:
+            - name: MODEL_PATH
+              value: "/mnt/models/model.pkl"
+            - name: greetingmessage
+              value: "{{inputs.parameters.greetmessage}}"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
