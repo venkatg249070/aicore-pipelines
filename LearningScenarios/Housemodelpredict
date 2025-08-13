@@ -1,7 +1,7 @@
 apiVersion: ai.sap.com/v1alpha1
 kind: ServingTemplate
 metadata:
-  name: server-pipeline
+  name: serverapp-pipeline
   annotations:
     scenarios.ai.sap.com/description: "Learning to predict house price"
     scenarios.ai.sap.com/name: "House Price (Tutorial)"
