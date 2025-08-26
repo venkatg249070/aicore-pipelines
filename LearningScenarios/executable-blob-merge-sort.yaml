@@ -1,0 +1,42 @@
+apiVersion: ai.sap.com/v1alpha1 kind: ExecutableTemplate metadata:name: blob-merge-sortannotations:scenarios.ai.sap.com/name: "Code (Tutorial)"scenarios.ai.sap.com/description: "Merge part-*.csv, sort by 4th column, delete parts"executables.ai.sap.com/name: "merge-sort"executables.ai.sap.com/description: "Merge+Sort"labels:ai.sap.com/version: "5.0" spec:inputs:parameters:- name: base_prefixtype: stringdefault: "ai_poc/data/dataset/"- name: foldertype: stringdefault: ""- name: csv_blobtype: stringdefault: ""- name: download_workerstype: integerdefault: 64- name: delete_workerstype: integerdefault: 256- name: sort_col_indextype: integerdefault: 4- name: duckdb_threadstype: integerdefault: 0- name: AZURE_ACCOUNT_URLtype: string- name: AZURE_SAS_TOKENtype: string- name: AZURE_CONTAINERtype: stringtemplate: |
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      labels:
+        ai.sap.com/resourcePlan: starter
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          imagePullSecrets:
+            - name: credstutorialrepo
+          containers:
+            - name: worker
+              image: docker.io/chetankommula/blob-tools:latest
+              imagePullPolicy: Always
+              command:
+                - python
+                - app.py
+                - merge-sort
+                - --base-prefix
+                - "{{inputs.parameters.base_prefix}}"
+                - --folder
+                - "{{inputs.parameters.folder}}"
+                - --csv-blob
+                - "{{inputs.parameters.csv_blob}}"
+                - --download-workers
+                - "{{inputs.parameters.download_workers}}"
+                - --delete-workers
+                - "{{inputs.parameters.delete_workers}}"
+                - --sort-col-index
+                - "{{inputs.parameters.sort_col_index}}"
+                - --duckdb-threads
+                - "{{inputs.parameters.duckdb_threads}}"
+                - --delete-parts
+              env:
+                - name: AZURE_ACCOUNT_URL
+                  value: "{{inputs.parameters.AZURE_ACCOUNT_URL}}"
+                - name: AZURE_SAS_TOKEN
+                  value: "{{inputs.parameters.AZURE_SAS_TOKEN}}"
+                - name: AZURE_CONTAINER
+                  value: "{{inputs.parameters.AZURE_CONTAINER}}"
