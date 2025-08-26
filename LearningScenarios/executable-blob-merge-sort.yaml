@@ -1,0 +1,58 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ExecutableTemplate
+metadata:
+  name: blob-merge-sort
+  annotations:
+    scenarios.ai.sap.com/name: "Code (Tutorial)"
+    scenarios.ai.sap.com/description: "Merge part-*.csv files and sort by a column"
+    executables.ai.sap.com/name: "merge-sort"
+    executables.ai.sap.com/description: "Merge & Sort"
+  labels:
+    ai.sap.com/version: "5.0"
+spec:
+  inputs:
+    parameters:
+      - name: prefix
+        type: string
+      - name: sort_column
+        type: string
+      - name: output
+        type: string
+        default: merged.csv
+      - name: AZURE_ACCOUNT_URL
+        type: string
+      - name: AZURE_SAS_TOKEN
+        type: string
+      - name: AZURE_CONTAINER
+        type: string
+  template:
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      labels:
+        ai.sap.com/resourcePlan: starter
+    spec:
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: credstutorialrepo
+      containers:
+        - name: worker
+          image: docker.io/chetankommula/blob-tools:latest
+          imagePullPolicy: Always
+          command:
+            - python
+            - app.py
+            - merge-sort
+            - --prefix
+            - "{{inputs.parameters.prefix}}"
+            - --sort-column
+            - "{{inputs.parameters.sort_column}}"
+            - --output
+            - "{{inputs.parameters.output}}"
+          env:
+            - name: AZURE_ACCOUNT_URL
+              value: "{{inputs.parameters.AZURE_ACCOUNT_URL}}"
+            - name: AZURE_SAS_TOKEN
+              value: "{{inputs.parameters.AZURE_SAS_TOKEN}}"
+            - name: AZURE_CONTAINER
+              value: "{{inputs.parameters.AZURE_CONTAINER}}"
