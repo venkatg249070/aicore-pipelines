@@ -28,6 +28,6 @@ spec:
       command: ["/bin/sh", "-c"]
       env:
         - name: COLUMN_INDEX # name of the environment variable inside Docker container
-          value: "{{workflow.parameters.DT_MAX_DEPTH}}" # value to set from local (to workflow) variable DT_MAX_DEPTH
+          value: "{{workflow.parameters.COLUMN_INDEX}}" # value to set from local (to workflow) variable DT_MAX_DEPTH
       args:
         - python /app/src/main.py"
