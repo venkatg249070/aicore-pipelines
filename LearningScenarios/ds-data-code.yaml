@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: dsdata-pipeline # executable id, must be unique across all your workflows (YAML files)
+  annotations:
+    scenarios.ai.sap.com/description: "Data from Datasphere to Azure Blob"
+    scenarios.ai.sap.com/name: "Sales Dataset (Tutorial)" # Scenario name should be the use case
+    executables.ai.sap.com/description: "Loading FMCG Sales Data from Datasphere"
+    executables.ai.sap.com/name: "Data Load" # Executable name should describe the workflow in the use case
+  labels:
+    scenarios.ai.sap.com/id: "loading-salesdata"
+    ai.sap.com/version: "load"
+spec:
+  imagePullSecrets:
+    - name: doccredstutorialrepo # your docker registry secret
+  entrypoint: mypipeline
+  arguments:
+    parameters: # placeholder for string like inputs
+        - name: COLUMN_INDEX # identifier local to this workflow
+  templates:
+  - name: mypipeline
+    steps:
+    - - name: mypredictor
+        template: mycodeblock1
+  - name: mycodeblock1
+    container:
+      image: docker.io/venkatg249070/dsdata:load # Your docker image name
+      command: ["/bin/sh", "-c"]
+      env:
+        - name: COLUMN_INDEX # name of the environment variable inside Docker container
+          value: "{{workflow.parameters.DT_MAX_DEPTH}}" # value to set from local (to workflow) variable DT_MAX_DEPTH
+      args:
+        - python /app/src/main.py"
