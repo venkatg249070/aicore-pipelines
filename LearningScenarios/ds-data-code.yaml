@@ -9,7 +9,7 @@ metadata:
     executables.ai.sap.com/name: "Data Load" # Executable name should describe the workflow in the use case
   labels:
     scenarios.ai.sap.com/id: "loading-salesdata"
-    ai.sap.com/version: "load"
+    ai.sap.com/version: "loads"
 spec:
   imagePullSecrets:
     - name: doccredstutorialrepo # your docker registry secret
